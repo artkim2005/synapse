@@ -1,5 +1,6 @@
-import { BookOpen, Clock, Download, FileText, Play } from "lucide-react";
-import type { ReactNode } from "react";
+import { BarChart3, BookOpen, Clock, Download, FileText, Play } from "lucide-react";
+import Link from "next/link";
+import type { ComponentType, ReactNode } from "react";
 import { Label } from "./Badge";
 
 function CardShell({ children }: { children: ReactNode }) {
@@ -15,16 +16,38 @@ export function CourseCard({
   description,
   lessons,
   duration,
+  level,
+  icon: Icon,
+  thumbnailClassName = "bg-gradient-to-br from-neutral-900 to-primary-500",
+  videoDuration,
+  href,
 }: {
   title: string;
   description: string;
   lessons: number;
   duration: string;
+  level?: string;
+  icon?: ComponentType<{ className?: string; strokeWidth?: number }>;
+  thumbnailClassName?: string;
+  videoDuration?: string;
+  href?: string;
 }) {
-  return (
+  const content = (
     <CardShell>
-      <div className="relative flex h-32 items-start bg-gradient-to-br from-neutral-900 to-primary-500 p-3">
+      <div className={`relative flex h-32 items-start p-3 ${thumbnailClassName}`}>
         <Label tone="video">Course</Label>
+        {Icon && (
+          <Icon
+            className="absolute inset-0 m-auto size-12 text-white/90"
+            strokeWidth={1.5}
+          />
+        )}
+        {videoDuration && (
+          <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-soft bg-neutral-900/80 px-1.5 py-0.5 text-[11px] text-white">
+            <Play className="size-2.5 fill-white text-white" />
+            {videoDuration}
+          </span>
+        )}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-4">
         <h3 className="text-sm font-semibold text-neutral-900">{title}</h3>
@@ -38,10 +61,18 @@ export function CourseCard({
             <Clock className="size-3.5" strokeWidth={2} />
             {duration}
           </span>
+          {level && (
+            <span className="inline-flex items-center gap-1">
+              <BarChart3 className="size-3.5" strokeWidth={2} />
+              {level}
+            </span>
+          )}
         </div>
       </div>
     </CardShell>
   );
+
+  return href ? <Link href={href}>{content}</Link> : content;
 }
 
 export function VideoResultCard({

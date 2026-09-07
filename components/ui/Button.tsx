@@ -1,4 +1,5 @@
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
 type Variant = "primary" | "secondary" | "tertiary" | "text";
@@ -8,6 +9,7 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: Variant;
   size?: Size;
   withArrow?: boolean;
+  href?: string;
   children: ReactNode;
 }
 
@@ -34,17 +36,25 @@ export function Button({
   disabled,
   className = "",
   children,
+  href,
   ...rest
 }: ButtonProps) {
   const isText = variant === "text";
+  const classes = `inline-flex items-center justify-center rounded-small font-medium transition-colors disabled:cursor-not-allowed ${
+    isText ? "px-0 h-auto" : ""
+  } ${variantClasses[variant]} ${isText ? "" : sizeClasses[size]} ${className}`;
+
+  if (href && !disabled) {
+    return (
+      <Link href={href} className={classes}>
+        {children}
+        {withArrow && <ArrowRight className="size-4" strokeWidth={2} />}
+      </Link>
+    );
+  }
+
   return (
-    <button
-      disabled={disabled}
-      className={`inline-flex items-center justify-center rounded-small font-medium transition-colors disabled:cursor-not-allowed ${
-        isText ? "px-0 h-auto" : ""
-      } ${variantClasses[variant]} ${isText ? "" : sizeClasses[size]} ${className}`}
-      {...rest}
-    >
+    <button disabled={disabled} className={classes} {...rest}>
       {children}
       {withArrow && <ArrowRight className="size-4" strokeWidth={2} />}
     </button>
