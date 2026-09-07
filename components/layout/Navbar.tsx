@@ -1,5 +1,7 @@
-import { Bell, ChevronDown } from "lucide-react";
+import { SignInButton, SignUpButton, Show, UserButton } from "@clerk/nextjs";
+import { Bell } from "lucide-react";
 import Link from "next/link";
+import { Button } from "../ui/Button";
 import { SearchInput } from "../ui/Input";
 import { Logo } from "./Logo";
 
@@ -41,12 +43,23 @@ export function Navbar({ active = "courses" }: { active?: NavKey }) {
         >
           <Bell className="size-5" strokeWidth={2} />
         </button>
-        <button className="flex items-center gap-1 rounded-full hover:bg-neutral-100">
-          <span className="flex size-9 items-center justify-center rounded-full bg-primary-500 text-sm font-semibold text-white">
-            AK
-          </span>
-          <ChevronDown className="size-4 text-neutral-500" strokeWidth={2} />
-        </button>
+        <Show when="signed-out">
+          <div className="flex items-center gap-2">
+            <SignInButton mode="modal">
+              <Button variant="tertiary" size="sm">
+                Sign in
+              </Button>
+            </SignInButton>
+            <SignUpButton mode="modal">
+              <Button variant="primary" size="sm">
+                Sign up
+              </Button>
+            </SignUpButton>
+          </div>
+        </Show>
+        <Show when="signed-in">
+          <UserButton />
+        </Show>
       </div>
     </header>
   );
